@@ -24,7 +24,7 @@ async function createTicket(enrollmentId: number, ticketTypeId: number) {
   });
 }
 
-async function findOneByTicketId(id: number) {
+async function getTicketById(id: number) {
   return prisma.ticket.findUnique({
     where: { id },
     select: {
@@ -34,11 +34,19 @@ async function findOneByTicketId(id: number) {
   });
 }
 
+async function updateTicketStatus(id: number) {
+  return prisma.ticket.update({
+    where: { id },
+    data: { status: 'PAID' },
+  });
+}
+
 const ticketRepository = {
   getTickets,
   getTicketsTypes,
   createTicket,
-  findOneByTicketId,
+  getTicketById,
+  updateTicketStatus,
 };
 
 export default ticketRepository;
