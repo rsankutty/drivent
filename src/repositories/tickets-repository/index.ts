@@ -1,22 +1,41 @@
+import { Ticket, TicketStatus, TicketType } from '@prisma/client';
 import { prisma } from '@/config';
+import { CreateTicketParams } from '@/protocols';
 
-async function getTickets(userId: number) {
-  return prisma.ticket.findFirst({
-    where: { Enrollment: { User: { id: userId } } },
-    include: { TicketType: true },
-  });
-}
-
-async function getTicketsTypes() {
+async function findTicketTypes(): Promise<TicketType[]> {
   return prisma.ticketType.findMany();
 }
 
-async function createTicket(enrollmentId: number, ticketTypeId: number) {
+async function findTicketByEnrollmentId(enrollmentId: number) {
+  return prisma.ticket.findFirst({
+    where: { enrollmentId },
+    include: {
+      TicketType: true, //join
+    },
+  });
+}
+
+async function createTicket(ticket: CreateTicketParams) {
   return prisma.ticket.create({
-    data: {
-      enrollmentId,
-      ticketTypeId,
-      status: 'RESERVED',
+    data: ticket,
+  });
+}
+
+async function findTickeyById(ticketId: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      id: ticketId,
+    },
+    include: {
+      Enrollment: true,
+    },
+  });
+}
+
+async function findTickeWithTypeById(ticketId: number) {
+  return prisma.ticket.findFirst({
+    where: {
+      id: ticketId,
     },
     include: {
       TicketType: true,
@@ -24,29 +43,22 @@ async function createTicket(enrollmentId: number, ticketTypeId: number) {
   });
 }
 
-async function getTicketById(id: number) {
-  return prisma.ticket.findUnique({
-    where: { id },
-    select: {
-      TicketType: { select: { price: true } },
-      Enrollment: { select: { userId: true } },
+async function ticketProcessPayment(ticketId: number) {
+  return prisma.ticket.update({
+    where: {
+      id: ticketId,
+    },
+    data: {
+      status: TicketStatus.PAID,
     },
   });
 }
 
-async function updateTicketStatus(id: number) {
-  return prisma.ticket.update({
-    where: { id },
-    data: { status: 'PAID' },
-  });
-}
-
-const ticketRepository = {
-  getTickets,
-  getTicketsTypes,
+export default {
+  findTicketTypes,
+  findTicketByEnrollmentId,
   createTicket,
-  getTicketById,
-  updateTicketStatus,
+  findTickeyById,
+  findTickeWithTypeById,
+  ticketProcessPayment,
 };
-
-export default ticketRepository;
