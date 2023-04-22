@@ -5,7 +5,7 @@ import enrollmentRepository from '@/repositories/enrollment-repository';
 import ticketsRepository from '@/repositories/tickets-repository';
 
 async function validateHotels(userId: number) {
-  const enrollment = await enrollmentRepository.findById(userId);
+  const enrollment = await enrollmentRepository.findWithAddressByUserId(userId);
   if (!enrollment) throw notFoundError();
 
   const ticket = await ticketsRepository.findTicketByEnrollmentId(enrollment.id);
