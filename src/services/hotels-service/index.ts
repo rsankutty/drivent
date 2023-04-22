@@ -13,6 +13,8 @@ async function validateHotels(userId: number) {
 
   if (ticket.status !== 'PAID' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel)
     throw paymentRequiredError();
+
+  return;
 }
 
 async function getHotels(userId: number): Promise<Hotel[]> {
