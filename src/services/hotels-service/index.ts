@@ -21,6 +21,8 @@ async function getHotels(userId: number): Promise<Hotel[]> {
   await validateHotels(userId);
 
   const hotels = await hotelRepository.findHotels();
+  if (!hotels) throw notFoundError();
+
   return hotels;
 }
 
