@@ -21,12 +21,12 @@ async function getHotels(userId: number): Promise<Hotel[]> {
   await validateHotels(userId);
 
   const hotels = await hotelRepository.findHotels();
-  if (!hotels) throw notFoundError();
+  if (hotels.length === 0) throw notFoundError();
 
   return hotels;
 }
 
-async function getHotelWithRooms(hotelId: number, userId: number) {
+async function getHotelWithRooms(userId: number, hotelId: number) {
   await validateHotels(userId);
 
   const hotelRooms = await hotelRepository.findHotelRooms(hotelId);
