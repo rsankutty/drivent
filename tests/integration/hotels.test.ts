@@ -8,7 +8,7 @@ import {
   createPayment,
   createRoom,
   createTicket,
-  createTicketType,
+  createTicketTypeWithParams,
   createUser,
 } from '../factories';
 import { cleanDb, generateValidToken } from '../helpers';
@@ -56,7 +56,7 @@ function validateNotFound(route: string) {
     const user = await createUser();
     const token = await generateValidToken(user);
     const enrollment = await createEnrollmentWithAddress(user);
-    const ticketType = await createTicketType(false, true);
+    const ticketType = await createTicketTypeWithParams(false, true);
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
 
     const response = await server.get(`${route}`).set('Authorization', `Bearer ${token}`);
@@ -69,7 +69,7 @@ function validatePaymentError(route: string) {
     const user = await createUser();
     const token = await generateValidToken(user);
     const enrollment = await createEnrollmentWithAddress(user);
-    const ticketType = await createTicketType(false, true);
+    const ticketType = await createTicketTypeWithParams(false, true);
     await createTicket(enrollment.id, ticketType.id, TicketStatus.RESERVED);
     const hotel = await createHotel();
 
@@ -80,7 +80,7 @@ function validatePaymentError(route: string) {
     const user = await createUser();
     const token = await generateValidToken(user);
     const enrollment = await createEnrollmentWithAddress(user);
-    const ticketType = await createTicketType(true, true);
+    const ticketType = await createTicketTypeWithParams(true, true);
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
     const hotel = await createHotel();
 
@@ -92,7 +92,7 @@ function validatePaymentError(route: string) {
     const user = await createUser();
     const token = await generateValidToken(user);
     const enrollment = await createEnrollmentWithAddress(user);
-    const ticketType = await createTicketType(false, false);
+    const ticketType = await createTicketTypeWithParams(false, false);
     await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
     const hotel = await createHotel();
 
@@ -112,7 +112,7 @@ describe('GET /hotels', () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
-      const ticketType = await createTicketType(false, true);
+      const ticketType = await createTicketTypeWithParams(false, true);
       const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
       await createPayment(ticket.id, ticketType.price);
       const hotel = await createHotel();
@@ -144,7 +144,7 @@ describe('GET /hotels/:hotelId', () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
-      const ticketType = await createTicketType(false, true);
+      const ticketType = await createTicketTypeWithParams(false, true);
       const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
       await createPayment(ticket.id, ticketType.price);
       const hotel = await createHotel();
@@ -176,7 +176,7 @@ describe('GET /hotels/:hotelId', () => {
       const user = await createUser();
       const token = await generateValidToken(user);
       const enrollment = await createEnrollmentWithAddress(user);
-      const ticketType = await createTicketType(false, true);
+      const ticketType = await createTicketTypeWithParams(false, true);
       const ticket = await createTicket(enrollment.id, ticketType.id, TicketStatus.PAID);
       await createPayment(ticket.id, ticketType.price);
       const hotel = await createHotel();
