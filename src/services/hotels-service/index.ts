@@ -14,15 +14,14 @@ async function validateHotels(userId: number) {
   if (ticket.status !== 'PAID' || ticket.TicketType.isRemote || !ticket.TicketType.includesHotel)
     throw paymentRequiredError();
 
-  return;
+  const hotels = await hotelRepository.findHotels();
+  if (hotels.length === 0) throw notFoundError();
 }
 
 async function getHotels(userId: number): Promise<Hotel[]> {
   await validateHotels(userId);
 
   const hotels = await hotelRepository.findHotels();
-  if (hotels.length === 0) throw notFoundError();
-
   return hotels;
 }
 
