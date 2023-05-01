@@ -38,7 +38,7 @@ async function putBooking(userId: number, roomId: number, bookingId: number) {
   await bookingValidations(userId);
 
   const booking = await bookingRepository.findBookingById(bookingId);
-  if (!booking) throw notFoundError();
+  if (!booking) throw forbiddenError();
 
   const room = await bookingRepository.findRoomWithBooking(roomId);
   if (!room) throw notFoundError();
